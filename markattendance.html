@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mark Attendance</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px;
+      background-color: #f4f7fc;
+      animation: fadeIn 1s ease-in-out;
+      perspective: 1000px;
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      animation: bounceIn 1.2s ease-out;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    h2:hover {
+      transform: rotateX(5deg) rotateY(5deg) scale(1.05);
+      color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+
+    table:hover {
+      transform: rotateX(1deg) rotateY(1deg);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f1f9ff;
+      transform: scale(1.01) rotateZ(0.5deg);
+    }
+
+    td:hover {
+      background-color: #e0f0ff;
+      transform: scale(1.05);
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 30px auto;
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+      transform: scale(1.05) rotateZ(-1deg);
+    }
+
+    .present {
+      background-color: #d4edda !important;
+    }
+
+    .absent {
+      background-color: #f8d7da !important;
+    }
+
+    @media (max-width: 600px) {
+      table, th, td {
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>📋 Mark Attendance</h2>
+
+  <form id="attendanceForm">
+    <table>
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Name</th>
+          <th>Present</th>
+          <th>Absent</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody">
+        <!-- Student rows will be inserted here -->
+      </tbody>
+    </table>
+    <button type="submit" class="btn">Submit Attendance</button>
+  </form>
+
+  <script>
+    const students = [
+      { roll: "101", name: "Alice" },
+      { roll: "102", name: "Bob" },
+      { roll: "103", name: "Charlie" },
+      { roll: "104", name: "Dheepisha" }
+    ];
+
+    const tableBody = document.getElementById("studentTableBody");
+    students.forEach((student, index) => {
+      const row = document.createElement("tr");
+      row.setAttribute("id", `row_${index}`);
+      row.innerHTML = `
+        <td>${student.roll}</td>
+        <td>${student.name}</td>
+        <td><input type="radio" name="status_${index}" value="Present" required onchange="highlightRow(${index}, 'present')"></td>
+        <td><input type="radio" name="status_${index}" value="Absent" onchange="highlightRow(${index}, 'absent')"></td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    function highlightRow(index, status) {
+      const row = document.getElementById(`row_${index}`);
+      row.classList.remove('present', 'absent');
+      row.classList.add(status);
+    }
+
+    document.getElementById("attendanceForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const date = new Date().toLocaleDateString();
+      let attendanceData = [];
+
+      students.forEach((student, index) => {
+        const status = document.querySelector(`input[name='status_${index}']:checked`).value;
+        attendanceData.push({
+          roll: student.roll,
+          name: student.name,
+          date,
+          status
+        });
+      });
+
+      let allRecords = JSON.parse(localStorage.getItem("attendance") || "[]");
+      allRecords.push(...attendanceData);
+      localStorage.setItem("attendance", JSON.stringify(allRecords));
+      alert("Attendance submitted successfully!");
+    });
+  </script>
+</body>
+</html>

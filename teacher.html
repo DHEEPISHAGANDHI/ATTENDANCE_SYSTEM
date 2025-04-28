@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Tracking System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background: #e6f2ff;
+      display: flex;
+      justify-content: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background-color: #ffffff;
+      padding: 50px;
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      transform: translateY(-30px);
+      animation: slideUp 0.8s ease-out;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      font-weight: 600;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    p.intro {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      color: #666;
+    }
+    .card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin: 30px 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInCard 1s ease-out;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #333;
+    }
+
+    .card p {
+      margin-bottom: 20px;
+      color: #555;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        padding: 30px;
+      }
+
+      nav a {
+        display: block;
+        margin: 15px 0;
+      }
+
+      .card {
+        padding: 25px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p.intro {
+        font-size: 1rem;
+      }
+
+      .card h2 {
+        font-size: 1.3rem;
+      }
+
+      .card p {
+        font-size: 1rem;
+      }
+    }
+
+    /* Keyframes for Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInCard {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Attendance System</h1>
+    <p class="intro">
+      Welcome, Faculty Member!<br>
+      Easily track and manage student attendance.
+    </p>
+    <div class="card">
+      <h2>📋 Mark Attendance</h2>
+      <p>Click to log student attendance.</p>
+      <a href="markattendance.html" class="btn">Go</a>
+    </div>
+
+    <div class="card">
+      <h2>📅 View Records</h2>
+      <p>Check past attendance details.</p>
+      <a href="recordattendance.html" class="btn">View</a>
+    </div>
+
+    <div class="card">
+      <h2>📊 Generate Reports</h2>
+      <p>Download attendance reports.</p>
+      <a href="generate_reports.html" class="btn">Download</a>
+    </div>
+  </div>
+</body>
+</html>

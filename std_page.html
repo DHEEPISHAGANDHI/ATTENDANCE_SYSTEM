@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Attendance Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background:skyblue; 
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        
+        h1 {
+            color: #333;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            width: 250px;
+        }
+
+        .card:hover {
+            background:linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .chart-container {
+            width: 60%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+   
+
+    </style>
+</head>
+<body>
+
+   
+
+    <section class="container">
+        <h1>Welcome, Student!</h1>
+        <p>Check your attendance records and track your performance.</p>
+
+        <div class="cards">
+            <div class="card" onclick="window.location.href='viewattendance.html'">
+                <h2>📅 View Attendance</h2>
+                <p>Check your daily attendance records.</p>
+            </div>
+            <div class="card"onclick="window.location.href='percentage.html'">
+                <h2>📊 Track Attendance</h2>
+                <p>Monitor your attendance progress.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="chart-container">
+        <h2>📈 Monthly Attendance Overview</h2>
+        <canvas id="attendanceChart"></canvas>
+    </div>
+
+    <script>
+        const attendanceData = [20, 18, 22, 25, 24, 26, 28, 30, 29, 27, 25, 24]; // Sample days attended
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Attendance (Days Present)',
+                    data: attendanceData,
+                    backgroundColor: '#28a745',
+                    borderColor: '#28a745',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#28a745'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 31
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

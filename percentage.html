@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+      background: #e6f2ff;
+      margin: 0;
+      animation: fadeInBody 1s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 1.5rem;
+      animation: slideDown 0.7s ease-out;
+      transition: transform 0.5s ease;
+    }
+    .container:hover h1 {
+      transform: translateY(-5px) scale(1.05);
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: zoomIn 0.5s ease-in-out;
+      transition: transform 0.3s ease;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    th {
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tfoot {
+      font-weight: bold;
+      background-color: #e0f7fa;
+    }
+    .back-button {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    .back-button:hover {
+      background-color: #5a6268;
+    }
+
+    /* Progress bar styling */
+    .progress-container {
+      background-color: #f1f1f1;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 12px;
+      margin-top: 4px;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      transition: width 0.6s ease-in-out;
+    }
+
+    /* Tooltip style */
+    td[title] {
+      position: relative;
+      cursor: help;
+    }
+    td[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      th, td {
+        font-size: 14px;
+        padding: 8px;
+      }
+    }
+
+    @keyframes fadeInRow {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Attendance Dashboard</h1>
+   
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Subject</th>
+          <th>Total Days</th>
+          <th>Total Present</th>
+          <th>Absent</th>
+          <th>Present %</th>
+        </tr>
+      </thead>
+      <tbody id="attendance-body">
+        <!-- JS inserts rows here -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">Overall Percentage</td>
+          <td id="total-percent">--%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <script>
+    const sampleData = [
+      { subject: "Math", totalDays: 40, totalPresent: 35 },
+      { subject: "Science", totalDays: 38, totalPresent: 30 },
+      { subject: "English", totalDays: 42, totalPresent: 40 },
+      { subject: "Computer Science", totalDays: 36, totalPresent: 36 }
+    ];
+  
+    function renderAttendance(data) {
+      const tbody = document.getElementById('attendance-body');
+      const totalPercentTd = document.getElementById('total-percent');
+      tbody.innerHTML = '';
+  
+      let totalDaysSum = 0;
+      let totalPresentSum = 0;
+  
+      data.forEach((item, index) => {
+        const absent = item.totalDays - item.totalPresent;
+        const percent = ((item.totalPresent / item.totalDays) * 100).toFixed(2);
+        totalDaysSum += item.totalDays;
+        totalPresentSum += item.totalPresent;
+  
+        const row = document.createElement('tr');
+        row.style.animation = `fadeInRow 0.4s ease forwards ${index * 0.1}s`;
+        row.style.opacity = 0;
+  
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.subject}</td>
+          <td class="clickable" data-type="totalDays" data-subject="${item.subject}" data-value="${item.totalDays}" title="Classes conducted">${item.totalDays}</td>
+          <td class="clickable" data-type="totalPresent" data-subject="${item.subject}" data-value="${item.totalPresent}" title="Days you attended">${item.totalPresent}</td>
+          <td class="clickable" data-type="absent" data-subject="${item.subject}" data-value="${absent}" title="Days you missed">${absent}</td>
+          <td>
+            ${percent}% 
+            <div class="progress-container">
+              <div class="progress-bar" style="width: ${percent}%"></div>
+            </div>
+          </td>
+        `;
+  
+        tbody.appendChild(row);
+      });
+  
+      const overallPercent = ((totalPresentSum / totalDaysSum) * 100).toFixed(2);
+      totalPercentTd.textContent = `${overallPercent}%`;
+    }
+  
+    // Adding event only ONCE globally
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('clickable')) {
+        const subject = e.target.getAttribute('data-subject');
+        const value = e.target.getAttribute('data-value');
+        const type = e.target.getAttribute('data-type');
+  
+        let message = '';
+  
+        if (type === 'totalDays') {
+          message = `In ${subject}, there were ${value} total classes conducted.`;
+        } else if (type === 'totalPresent') {
+          message = `You attended ${value} classes in ${subject}.`;
+        } else if (type === 'absent') {
+          message = `You missed ${value} classes in ${subject}.`;
+        }
+  
+        alert(message); // Only one alert, no double
+      }
+    });
+  
+    renderAttendance(sampleData);
+  </script>
+  
+
+</body>
+</html>

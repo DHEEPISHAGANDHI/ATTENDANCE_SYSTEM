@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.85/build/spline-viewer.js"></script>
+
+  <title>Admin Login - Attendance System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative; 
+    }
+
+    .login-container {
+      background:skyblue;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      height: auto;
+      position: fixed;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    h2 {
+      color: #010101;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .input-field {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .login-btn {
+      background: #131925;
+      display: inline-block;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+   background:linear-gradient(to right, #1e3c72, #2a5298);
+      box-shadow: 0 10px 20px rgba(243, 240, 240, 0.44);
+    }
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      transform: scale(1.25); 
+    }
+
+    .funky-links-inline {
+      margin-top: 15px;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+    }
+
+    .funky-links-inline a {
+      color: rgb(2, 2, 2);
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    .funky-links-inline a:hover {
+      text-decoration: underline;
+    }
+    .loginForm{
+      width: 100%; display: flex; flex-direction: column; align-items: center;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <form id="loginForm" >
+      <input type="email" name="email" class="input-field" placeholder="Enter email" required>
+      <input type="password" name="password" class="input-field" placeholder="Enter Password" required>
+      <input type="text" name="key" class="input-field" placeholder="Enter the key" required>
+      <button type="submit" class="login-btn">Login</button>
+      <div class="funky-links-inline">
+        <a href="../login/loginstudent.html">🎓 Student Login</a> |  
+        <a href="../login/loginteacher.html">👨‍🏫 Teacher Login</a> |
+        <a href="../index.html">🏠 Home</a>
+      </div>
+    </form>
+  </div>
+
+  <spline-viewer class="background"  url="https://prod.spline.design/smKSDehj7VBkuIba/scene.splinecode"></spline-viewer>
+
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.querySelector('input[name="email"]').value;
+      const password = document.querySelector('input[name="password"]').value;
+      const key = document.querySelector('input[name="key"]').value;
+
+      if (email === "admin@12.com" && password === "admin123" && key === "secretkey") {
+        window.location.href = "../admin/admin.html";
+      } else {
+        alert("Invalid credentials. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

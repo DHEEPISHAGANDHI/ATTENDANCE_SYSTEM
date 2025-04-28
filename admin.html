@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin User Management</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #b9d8f7;
+      margin: 0;
+    }
+    h2, h3 {
+      color: #333;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin-bottom: 30px;
+    }
+    label {
+      margin: 10px 0 5px;
+      display: block;
+    }
+    input, select, button {
+      padding: 10px;
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #b3d0ef;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      padding: 15px;
+      border-bottom: 1px solid #dee2e6;
+      text-align: left;
+    }
+    th {
+      background:linear-gradient(to right, #1e3c72, #2a5298);
+      color: white;
+    }
+    .actions button {
+      margin-right: 10px;
+      width: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .controls input,
+    .controls select {
+      flex: 1;
+      min-width: 200px;
+    }
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+      }
+      td::before {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        color: #555;
+      }
+      td:nth-of-type(1)::before { content: "Email"; }
+      td:nth-of-type(2)::before { content: "Role"; }
+      td:nth-of-type(3)::before { content: "Name"; }
+      td:nth-of-type(4)::before { content: "Actions"; }
+    }
+  </style>
+</head>
+<body>
+  <h2>👨‍💼 Admin - User Management</h2>
+
+  <form id="addUserForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+
+    <label for="password">Temporary Password:</label>
+    <input type="text" id="password" required>
+
+    <label for="role">Role:</label>
+    <select id="role" required>
+      <option value="Teacher">Teacher</option>
+      <option value="Student">Student</option>
+    </select>
+
+    <label for="name">Full Name (optional):</label>
+    <input type="text" id="name">
+
+    <button type="submit">Add User</button>
+  </form>
+
+  <h3>📋 User List</h3>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search by email or name">
+    <label for="roleFilter">Filter by Role:</label>
+    <select id="roleFilter">
+      <option value="">All Roles</option>
+      <option value="Teacher">Teacher</option>
+      <option value="Student">Student</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="userList"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('addUserForm');
+    const userList = document.getElementById('userList');
+    const searchInput = document.getElementById('searchInput');
+    const roleFilter = document.getElementById('roleFilter');
+
+    let users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    function saveUsers() {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function renderUsers() {
+      const search = searchInput.value.toLowerCase();
+      const filter = roleFilter.value;
+
+      userList.innerHTML = '';
+      users
+        .filter(user => {
+          const matchesSearch =
+            user.email.toLowerCase().includes(search) ||
+            (user.name || '').toLowerCase().includes(search);
+          const matchesRole = !filter || user.role === filter;
+          return matchesSearch && matchesRole;
+        })
+        .forEach((user, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td>${user.name || '-'}</td>
+            <td class="actions">
+              <button onclick="resetPassword(${index})">Reset Password</button>
+              <button onclick="deleteUser(${index})">Delete</button>
+            </td>
+          `;
+          userList.appendChild(row);
+        });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newUser = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        role: document.getElementById('role').value,
+        name: document.getElementById('name').value
+      };
+      users.push(newUser);
+      saveUsers();
+      renderUsers();
+      form.reset();
+    });
+
+    function resetPassword(index) {
+      const newPassword = prompt('Enter new password:');
+      if (newPassword) {
+        users[index].password = newPassword;
+        saveUsers();
+        alert('Password reset successfully.');
+      }
+    }
+
+    function deleteUser(index) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        users.splice(index, 1);
+        saveUsers();
+        renderUsers();
+      }
+    }
+
+    searchInput.addEventListener('input', renderUsers);
+    roleFilter.addEventListener('change', renderUsers);
+
+    renderUsers();
+  </script>
+</body>
+</html>
